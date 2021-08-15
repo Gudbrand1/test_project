@@ -1,0 +1,357 @@
+Props and Slot are both used to pass data among child components
+
+The difference lies in the use case :
+- Props are used to pass data only, not really for a whole template and using them in templating might seems a good idea but it will be harder to read, to maintain, to understand.
+- They should be used strictly to pass data from parent to child and to display directly the data, difficult to use flexibly.
+- They however are shorter in the parent component and are great to display text in the same way accross multiple pages.
+
+
+-Slot are used to pass template + data to a child component. They are easily stylable with CSS and shorten the code in the child component.
+they are great to make reusables templates with differents layouts
+they are great to display icons for e.g
+they are also great to avoid using many v-if statements since you only pass the data if you want the data to be passed in.
+
+//Sumarized quickly (Like in the 2nd ressource article)
+
+Use props when you want to keep consistency across the application and only need to change a value (When you don't need to change style or / and template)
+
+Use slots when you want to customize components from the parent element (So if you need to use styling or / and use a different template)
+
+
+// Ressources for this one :
+// Long Video explaining the functionnement : 
+// https://www.youtube.com/watch?v=F44OoFk8spg
+
+
+// short text explanation of the difference between the two and little example
+https://medium.com/@nicomeyer/vue-js-slots-vs-props-af87078a8bd
+
+//complementary ressource on the subject 
+https://medium.com/notonlycss/the-difference-between-props-slots-and-scoped-slots-in-vue-js-a697b57099ee
+
+
+
+Mixins :
+
+They are used to export the same data accross multiple components and can take the form of any component option.
+They end up being merged with the component options in which they are imported. 
+if they share a common option ==> the option of the Mixin will be replaced by the component one
+
+Ex : 
+Instead of writing the same text over and over again as a component prop
+we could use a mixxins to export a computed property containing all of the values
+It allows to keep consistency accross the web-app easier maintanibility 
+
+//Text Resources : 
+
+https://javascript.plainenglish.io/how-to-work-with-mixins-on-vue-js-a61f72737f25
+https://javascript.plainenglish.io/vue-3-mixins-3c7cb1a76ff3
+
+
+v-bind :
+
+It is used to bind html attribute with or without conditionning, It is also use to pass prop to child components (One way binding)
+just like v-model for inputs elements but without the handling of the OnInputEvent (two way binding)
+
+Decorator : 
+
+Typescript library adding alternativ syntax ( Way shorter and easier to read ) 
+
+//https://github.com/kaorun343/vue-property-decorator
+
+    @Prop
+        used to pass property from parent to child component
+    @PropSync
+        (props + .sync)
+        use the prop Name and use it as an argument of the decorator.
+        it creates a computed getter and a computed setter as well
+        used to passing data from child to parent component
+    @Model
+        modifier for vModel allowing to change prop or event
+    @ModelSync
+        modifier for vModel allowing to change prop or event adding a computed getter and a computed setter as well
+    @Watch
+        Listen for an expression or computed function and execute the callback function when the expression change / when the computed function value change
+    @Provide (Pair with Inject)
+        type =  provide: Object | () => Object.  Will be given to the child component in which they are injected into as well EVERY one of their child component
+        //NOT REACTIVE
+
+    @Inject (Pair with Provide)
+        type = Array<string> | { [key: string]: string | Symbol | Object }      Inject the provider into the child and their own childs elements.
+        //NOT REACTIVE
+
+    @ProvideReactive &&  @InjectReactive  --> 
+        These decorators are reactive version of @Provide and @Inject. If a provided value is modified by parent component, then the child component can catch this modification.
+
+    @Emit
+        trigger an event named after the first parameter, and then pass the optionnal second (And third and forth [...]) to the Listener callback function
+    @Ref
+        reference some HTML Element and access them from ref  ( Like some kind of vue version of document.querySelector()  )
+    @VModel
+        equivalent to v-model it is used for two way binding of data (display data as a prop and allow modify it)
+    @Component (comming from vue-class-component API, reused here in vue property decorator)
+        A decorator to define class style components. You can pass Vue component options via the optional 1st argument 
+    Mixins (comming from vue-class-component API, reused here in vue property decorator)
+        helper function for mixin allowing TypeScript to infer mixin types and inherit them on the component type.
+
+are all the shortands syntax added by vue-property-decorator // Unless specified otherwise
+
+.sync (Vue)
+
+trigger a $emit event and is listen for in the parent.
+
+
+//Vuex best practices : 
+https://dev.to/timothyokooboh/vuex-best-practices-45dd
+
+1) Always Mutate state with Mutation
+
+2) Every Mutation should be dispatched by an action
+
+3) Async In Action
+
+4) Mutation should only Mutate the state (AND NOTHING ELSE)
+
+5) Actions should always ( do at least one or more ) : 
+ -> Fetch Data
+ -> Commit A Mutation
+ -> Dispatch an other action
+
+6) Use getters only to get a computed value :
+(ex) this.$store.state.age already store the age
+
+const getters: {
+    isUnderAge(state){
+        return state.age < 18
+    }
+}
+
+gives us a boolean
+
+this.$store.getters.isUnderAge allows us to find this boolean in any component.
+
+// To Make error proof components :
+https://vuejs.org/v2/style-guide/#Priority-A-Rules-Essential-Error-Prevention
+
+Follow the above link rules (Preventing errors)
+
+Use Prop and Slot as intended --> They both awesome when properly use and are tricky when mixed up and will cause instability / errors.
+
+Use Jest to test every use case and be sure that everything works as intended
+
+//To make reusable components :
+
+Follow the routine sticked on the wall.
+
+think through and through the component
+
+
+VUE STYLE GUIDE RULES :
+
+///////////////////////////////////////////
+ESSENTIAL:
+    Namming :
+            (Component)
+        - Every Component name should have at least 2 words
+            (property)
+        - don't use '_' and '$' to declare a property 
+
+    Best Practice :
+            (Data)
+        - Data is ALWAYS a function that return an object (except in the root )
+            (Props)
+        - Define Props as well as possible
+            (v-for)
+        - Don't use v-for without Key
+        - Don't use v-for with v-if
+            (style)
+        -Always use scopped (Unless in Root or while Templating )
+///////////////////////////////////////////
+Strongly Recommended 
+    Code Organisation :
+        (Build System)
+    -   1 Component  = 1 File
+        (Attributes)
+    - 1 Attributes = 1 Line
+        ( template )
+    - 1 double bracket = 1 property ( No complex expression )
+    - Use both type of quotation mark when needed in bind rather than removing one set of quotation mark
+
+        (computed Properties)
+    - A computed property should be as simple as possible --> Splitted
+    Namming :
+        (Component)
+    - Use Pascal Case or Kebab case
+    - Use Base App or V as a prefix for base component ( for template components )
+    - Use The as a prefix for components that are meant to be the only instance running.
+    - For child components that rely on their parent they should have the parent name as a prefix
+    - For component name with multiple words order the words from most specific to most descriptiv
+    - Components with no content should be self closing unless  in DOM Template  
+    - Pascal Case in every component names
+    - Kebab Case in all of the DOM Template 
+    - Pascal Case for components in js / jsx
+    - Use full names ( no abbreviation )
+    - If we use shortands always use shortands else never use them (: <=> v-bind:, @ <=> v-on:, # <=> v-slot)
+
+        (Props)
+    - camelCase for declaration of Props and kebab-case in templates (or in jsx)
+ 
+///////////////////////////////////////////
+Recommended
+
+Component (order) : 
+
+    Side Effects (triggers effects outside the component)
+        el
+
+    Global Awareness (requires knowledge beyond the component)
+        name
+        parent
+
+    Component Type (changes the type of the component)
+        functional
+
+    Template Modifiers (changes the way templates are compiled)
+        delimiters
+        comments
+
+    Template Dependencies (assets used in the template)
+        components
+        directives
+        filters
+
+    Composition (merges properties into the options)
+        extends
+        mixins
+
+    Interface (the interface to the component)
+        inheritAttrs
+        model
+        props/propsData
+
+    Local State (local reactive properties)
+        data
+        computed
+
+    Events (callbacks triggered by reactive events)
+        watch
+        Lifecycle Events (in the order they are called)
+            beforeCreate
+            created
+            beforeMount
+            mounted
+            beforeUpdate
+            updated
+            activated
+            deactivated
+            beforeDestroy
+            destroyed
+
+    Non-Reactive Properties (instance properties independent of the reactivity system)
+        methods
+
+    Rendering (the declarative description of the component output)
+        template/render
+        renderError
+
+    Element attrubute (order)
+
+    
+
+    Definition (provides the component options)
+        is
+
+    List Rendering (creates multiple variations of the same element)
+        v-for
+
+    Conditionals (whether the element is rendered/shown)
+        v-if
+        v-else-if
+        v-else
+        v-show
+        v-cloak
+
+    Render Modifiers (changes the way the element renders)
+        v-pre
+        v-once
+
+    Global Awareness (requires knowledge beyond the component)
+        id
+
+    Unique Attributes (attributes that require unique values)
+        ref
+        key
+
+    Two-Way Binding (combining binding and events)
+        v-model
+
+    Other Attributes (all unspecified bound & unbound attributes)
+
+    Events (component event listeners)
+        v-on
+
+    Content (overrides the content of the element)
+        v-html
+        v-text
+
+    ( Component )
+- adding empty line if the code gets hard to read is allowed
+-  style must always be the last in components
+
+///////////////////////////////////////////
+ Use with caution :
+
+    (v-if)
+    if the v-if and the v-else are the same element type use a key common to both of them
+
+    ( styling )
+    when using scoped (So everywhere except in template and root)
+        don't use global element selector use classes instead.
+
+    ( Props / Events )
+        Use them to establish communication between child and parents
+    
+    (Global Event bus / vs Vuex)
+        Recommended to use Vuex instead of GLobal event bus in almost every case.
+
+///////////////////////////////////////////
+
+Drag and Drop :
+    use case of :drag
+        - will be used for Moving an element with a trailling image of the element.
+        - need to have a drop zone pre establish
+
+    use case of :mouseDown ( In a drag and drop )
+        - used to move an element responsively
+        - can be used without pre establish drop zone
+    
+    Box Model : 
+                                Top
+        +------------------------------------------------------------------------------------+
+        |      border                                                                        |
+        |   +----------------------------------------------------------------+               |
+        |   |   margin                                                       |               |
+        |   |   +-------------------------------------------+                |               |
+        |   |   |        padding                            |                |               |
+        |   |   |   +-------------------+                   |                |               |
+        |   |   |   |       width       |                   |                |               |
+        |   |   |   |                   |                   |                |               |
+   Left |   |   |   |                   |                   |                |               | Right
+        |   |   |   |height             |                   |                |               |
+        |   |   |   |                   |                   |                |               |
+        |   |   |   |                   |                   |                |               |
+        |   |   |   +-------------------+                   |                |               |
+        |   |   +-------------------------------------------+                |               |
+        |   +----------------------------------------------------------------+               |
+        +------------------------------------------------------------------------------------+
+                            Bottom
+
+
+///////////////////////////////////////////
+
+SASS : create variable and reuse them
+use Syntax (like &.class) to get it properly
+
+Create mixin to reuse the CSS.
+
+Use @Extend to expand the syntax. to enforce DRY principle.

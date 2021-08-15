@@ -1,0 +1,26 @@
+$linear-gradient :  linear-gradient(
+    90deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(9, 9, 121, 1) 10%,
+    rgba(8, 40, 141, 1) 20%,
+    rgba(8, 40, 141, 1) 30%,
+    rgba(5, 97, 179, 1) 40%,
+    rgba(0, 212, 255, 1) 50%,
+    rgba(5, 97, 179, 1) 60%,
+    rgba(5, 97, 179, 1) 70%,
+    rgba(8, 40, 141, 1) 80%,
+    rgba(8, 40, 141, 1) 90%,
+    rgba(9, 9, 121, 1) 100%,
+    rgba(2, 0, 36, 1) 100%
+  );
+
+$no-margin: 0;
+$no-padding: 0;
+
+$full-width: 100vw;
+$full-height: 100vh;
+
+$the-bottom-nav:10vh;
+$the-app-container-height: ( $full-height - $the-bottom-nav );
+
+$app-bottom-nav-background : #d2e6f7;
